@@ -1,11 +1,11 @@
 require('dotenv').config();
 const express = require("express");
 const app= express();
-const PORT=process.env.PORT
+const PORT=process.env.PORT || 80
 const indexRouter=require('./routes/index');
 const expressLayouts= require('express-ejs-layouts');
 const mongoose=require('mongoose');
-const db=process.env.MongoURI
+const db=process.env.MongoURI || "mongodb+srv://rubengs:t3SLA%408908@cluster0.ayvpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/Translations"
 const userz= require('./routes/userss');
 const session=require('express-session');
 const flash = require('connect-flash');
@@ -14,7 +14,7 @@ const passport = require('passport');
 //passport config
 require('./config/passport')(passport);
  
-
+ 
 
 app.use(expressLayouts);
 app.set('view engine','ejs');
