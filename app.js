@@ -11,6 +11,8 @@ const session=require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 
+const filex = require("./fileShare/filex");
+
 //passport config
 require('./config/passport')(passport);
  
@@ -49,6 +51,7 @@ app.use((req,res,next)=>{
 app.use(express.urlencoded({extended:false}));
 app.use(indexRouter);
 app.use('/users',userz);
+app.use(filex)
 
 
 
