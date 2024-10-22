@@ -2,6 +2,9 @@ const multer = require("multer")
 const upload = multer({dest:"uploads"})
 const bcrypt = require("bcrypt")
 const File = require("./models/File");
+const express = require('express');
+const app = express();
+
 
 function filex(){
 app.post("/upload",upload.single("file"),async(req,res) =>{
