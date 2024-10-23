@@ -10,6 +10,7 @@
   "author": "john Gospel",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
     "dotenv": "^14.3.2",
@@ -19,6 +20,7 @@
     "express-session": "^1.17.2",
     "mongodb": "^6.5.0",
     "mongoose": "^6.1.4",
+    "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
   },
