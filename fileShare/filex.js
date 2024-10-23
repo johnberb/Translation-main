@@ -48,20 +48,23 @@ function filex(app) {
     app.route("/file/:id").get(handleDownload).post(handleDownload);
 
     async function handleDownload(req, res) {
-        const file = await File.findById(req.params.id);
-        if (file.password != null) {
-            if (req.body.password == null) {
-                res.render("password");
-                return;
-            }
-            if (!(await bcrypt.compare(req.body.password, file.password))) {
-                res.render("password", { error: true });
-                return;
-            }
-        }
-
-        gfs.openDownloadStream(file.path).pipe(res);
+    const file = await File.findById(req.params.id);
+    if (!file) {
+        return res.status(404).send('File not found');
     }
+    if (file.password != null) {
+        if (req.body.password == null) {
+            res.render("password");
+            return;
+        }
+        if (!(await bcrypt.compare(req.body.password, file.password))) {
+            res.render("password", { error: true });
+            return;
+        }
+    }
+
+    gfs.openDownloadStream(file.path).pipe(res);
+}
 }
 
 module.exports = filex;
