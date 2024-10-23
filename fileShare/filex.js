@@ -63,7 +63,7 @@ function filex(app) {
         }
     }
 
-    gfs.openDownloadStream(ObjectId).pipe(res);
+    gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
 }
 }
 
