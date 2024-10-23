@@ -1,44 +1,67 @@
-const multer = require("multer")
-const upload = multer({dest:"uploads"})
-const bcrypt = require("bcrypt")
+const multer = require("multer");
+const { GridFsStorage } = require("multer-gridfs-storage");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const File = require("../models/File");
-const express = require('express');
-const app = express();
 
+const mongoURI = process.env.MongoURI || "mongodb+srv://rubengs:gOOD123@cluster0.ayvpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/Translations";
 
-function filex(){
-app.post("/upload",upload.single("file"),async(req,res) =>{
-    const fileData = {
-        path: req.file.path,
-        originalName: req.file.originalname
+// Create mongoose connection
+const conn = mongoose.createConnection(mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+// Init gfs
+let gfs;
+conn.once("open", () => {
+    gfs = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: "uploads",
+    });
+});
+
+// Create storage engine
+const storage = new GridFsStorage({
+    url: mongoURI,
+    file: (req, file) => {
+        return {
+            filename: file.originalname,
+            bucketName: "uploads",
+        };
+    },
+});
+const upload = multer({ storage });
+
+function filex(app) {
+    app.post("/upload", upload.single("file"), async (req, res) => {
+        const fileData = {
+            path: req.file.id,
+            originalName: req.file.originalname,
+        };
+        if (req.body.password != null && req.body.password !== "") {
+            fileData.password = await bcrypt.hash(req.body.password, 10);
+        }
+        const file = await File.create(fileData);
+        res.render("index", { fileLink: `${req.headers.origin}/file/${file.id}` });
+    });
+
+    app.route("/file/:id").get(handleDownload).post(handleDownload);
+
+    async function handleDownload(req, res) {
+        const file = await File.findById(req.params.id);
+        if (file.password != null) {
+            if (req.body.password == null) {
+                res.render("password");
+                return;
+            }
+            if (!(await bcrypt.compare(req.body.password, file.password))) {
+                res.render("password", { error: true });
+                return;
+            }
+        }
+
+        gfs.openDownloadStream(file.path).pipe(res);
     }
-    if (req.body.password != null && req.body.password !== ""){
-        fileData.password = await bcrypt.hash(req.body.password,10)
-    }
-    const file = await File.create(fileData)
-    
-        res.render("index",{ fileLink: `${req.headers.origin}/file/${file.id}`})
-    })
-    app.route("/file/:id").get(handleDownload).post(handleDownload)
-    
-async function handleDownload(req,res){
-    const file =  await File.findById(req.params.id)
-       if (file.password != null){
-        if(req.body.password == null ) {
-            res.render("password")
-            return
-       }
-       if(!(await bcrypt.compare(req.body.password,file.password))){
-        res.render("password",{error:true})
-        return
-       }
-    }
-       
-       file.downloadCount++
-       await file.save()
-       console.log(file.downloadCount) 
-       res.download(file.path,file.originalName)
-    
 }
-}
-module.exports=filex;
+
+module.exports = filex;
