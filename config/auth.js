@@ -12,7 +12,4 @@ module.exports = {
       }
       res.redirect('/dashboard');      
     }
-    getUserFromSessionOrToken: function(req) {
-    return req.user; // Assuming Passport.js attaches the user to req.user
-}
   };
