@@ -12,15 +12,16 @@ const flash = require('connect-flash');
 const passport = require('passport');
 
 const filex = require("./fileShare/filex");
-
-
 //passport config
 require('./config/passport')(passport);
  
- 
+function getUserFromSessionOrToken(req) {
+    return req.user; // Assuming Passport.js attaches the user to req.user
+} 
 
 app.use(expressLayouts);
 app.set('view engine','ejs');
+
 
 mongoose.set('strictQuery',true)
 mongoose.connect(db,{useNewUrlParser:true,useUnifiedTopology: true})
@@ -38,16 +39,22 @@ app.use(passport.session());
 
 app.use(flash());
 
+app.use((req, res, next) => {
+    // Assuming you have a function to get the user from the session or token
+    req.user = getUserFromSessionOrToken(req);
+    next();
+});
+
+
 //to color the msg use global variables
 
 app.use((req,res,next)=>{
     res.locals.success_msg=req.flash('success_msg');
     res.locals.error_msg=req.flash('error_msg');
     res.locals.error=req.flash('error');
+    res.locals.user = req.user;
     next();
 })
-
-
 
 app.use(express.urlencoded({extended:false}));
 app.use(indexRouter);
