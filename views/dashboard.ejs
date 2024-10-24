@@ -1,10 +1,12 @@
-<h1 class="mt-4">Dashboard</h1>
+<div class=".container">
+  
+<h1 class="mt-4 font-family-base">THE MESSAGE TRANSFER HUB</h1>
 <p class="lead mb-3">Welcome <%= user.name %></p>
 <a href="/users/login" class="btn btn-secondary">Logout</a>
 
 <%# file sharing engine %>
 <div>
-    <h1>THE MESSAGE TRANSFER HUB</h1>
+    <h1 class="" >THE MESSAGE TRANSFER HUB</h1>
   </div>
   <% if(locals.fileLink != null){%>
     <div style="margin-bottom: 1rem;">
@@ -19,3 +21,4 @@
       <input type="password" id="password" name="password"/>
       <button style="grid-column: span 2;"   type="submit">Share</button>
     </form>
+</div>
