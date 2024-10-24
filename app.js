@@ -10,18 +10,18 @@ const userz= require('./routes/userss');
 const session=require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
-const { getUserFromSessionOrToken } = require('./config/auth');
 
 const filex = require("./fileShare/filex");
-
-
 //passport config
 require('./config/passport')(passport);
  
- 
+function getUserFromSessionOrToken(req) {
+    return req.user; // Assuming Passport.js attaches the user to req.user
+} 
 
 app.use(expressLayouts);
 app.set('view engine','ejs');
+
 
 mongoose.set('strictQuery',true)
 mongoose.connect(db,{useNewUrlParser:true,useUnifiedTopology: true})
