@@ -10,6 +10,7 @@ const userz= require('./routes/userss');
 const session=require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
+const { getUserFromSessionOrToken } = require('./config/auth');
 
 const filex = require("./fileShare/filex");
 
