@@ -34,16 +34,19 @@ const upload = multer({ storage });
 
 function filex(app) {
     app.post("/upload", upload.single("file"), async (req, res) => {
-        const fileData = {
-            path: req.file.id,
-            originalName: req.file.originalname,
-        };
-        if (req.body.password != null && req.body.password !== "") {
-            fileData.password = await bcrypt.hash(req.body.password, 10);
-        }
-        const file = await File.create(fileData);
-        res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`,user:req.user });
-    });
+    if (!req.file) {
+        return res.status(400).send('File upload failed.');
+    }
+    const fileData = {
+        path: req.file.id || req.file._id, // Use _id if id is undefined
+        originalName: req.file.originalname,
+    };
+    if (req.body.password != null && req.body.password !== "") {
+        fileData.password = await bcrypt.hash(req.body.password, 10);
+    }
+    const file = await File.create(fileData);
+    res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`, user: req.user });
+});
 
     app.route("/file/:id").get(handleDownload).post(handleDownload);
 
