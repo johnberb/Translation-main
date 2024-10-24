@@ -38,6 +38,13 @@ app.use(passport.session());
 
 app.use(flash());
 
+app.use((req, res, next) => {
+    // Assuming you have a function to get the user from the session or token
+    req.user = getUserFromSessionOrToken(req);
+    next();
+});
+
+
 //to color the msg use global variables
 
 app.use((req,res,next)=>{
@@ -47,12 +54,6 @@ app.use((req,res,next)=>{
     res.locals.user = req.user;
     next();
 })
-app.use((req, res, next) => {
-    // Assuming you have a function to get the user from the session or token
-    req.user = getUserFromSessionOrToken(req);
-    next();
-});
-
 
 app.use(express.urlencoded({extended:false}));
 app.use(indexRouter);
