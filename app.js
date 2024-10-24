@@ -46,7 +46,11 @@ app.use((req,res,next)=>{
     res.locals.error=req.flash('error');
     next();
 })
-
+app.use((req, res, next) => {
+    // Assuming you have a function to get the user from the session or token
+    req.user = getUserFromSessionOrToken(req);
+    next();
+});
 
 
 app.use(express.urlencoded({extended:false}));
