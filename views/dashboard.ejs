@@ -1,15 +1,15 @@
-<div class=".container p-2">
+<div class=".container p-2 bg-light">
 
 <h4 class="mt-4 font-family-base">THE MESSAGE TRANSFER HUB</h4>
-<p class="lead mb-3">Welcome <%= user.name %></p>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<p class="lead mb-1">Welcome <%= user.name %><a href="/users/login" class="btn btn-secondary">Logout</a></p>
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="#">QUICK BAR</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-1 mb-sm-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
@@ -38,11 +38,9 @@
     </div>
   </div>
 </nav>
-<a href="/users/login" class="btn btn-secondary">Logout</a>
-
 <%# file sharing engine %>
-<div>
-    <h1 class="" >THE MESSAGE TRANSFER HUB</h1>
+<div class=".container-sm">
+    <p class="mt-2 .fs-4 fw-bold" >UPLOAD YOUR FILE</p>
   </div>
   <% if(locals.fileLink != null){%>
     <div style="margin-bottom: 1rem;">
@@ -50,11 +48,21 @@
       <a href ="<%= locals.fileLink %>"><%= locals.fileLink %></a>
     </div>
   <% } %>
-    <form action="/upload" method="post" style="display: grid; gap: .5rem; grid-template-columns: auto 1fr;max-width: 500px;margin: 0 auto;" enctype="multipart/form-data">
-      <label for="file">File:</label> 
-      <input type="file" id="File" name="file" required/> 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password"/>
-      <button style="grid-column: span 2;"   type="submit">Share</button>
+
+    <form action="/upload" method="post"  enctype="multipart/form-data" class="">
+      
+      <div class="row ">
+        <div class="col-3 ">
+          <label for="file">File:</label> 
+          <input type="file" id="File" name="file" required/> 
+        </div>
+        <div class="col-3">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password"/>
+        </div>
+      </div>
+      <div class="mt-2 col col-lg-2 mx-2 gap-3">
+        <button class="btn btn-outline-dark btn-sm btn-border-radius-sm "  type="submit">Share</button>
+      </div>
     </form>
 </div>
