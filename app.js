@@ -10,8 +10,8 @@ const userz= require('./routes/userss');
 const session=require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
-
 const filex = require("./fileShare/filex");
+
 //passport config
 require('./config/passport')(passport);
  
@@ -33,6 +33,7 @@ app.use(session({
     resave:true,
     saveUninitialized:true
 }));
+
 //passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,4 +65,6 @@ app.use('/users',userz);
 filex(app);
 
 app.listen(PORT,console.log(`sever started on ${PORT}`));
+// Serve static files
+app.use(express.static('public'));
 
