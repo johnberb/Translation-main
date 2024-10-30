@@ -65,4 +65,14 @@
         <button class="btn btn-outline-dark btn-sm btn-border-radius-sm "  type="submit">Share</button>
       </div>
     </form>
+    <% if (fileLink) { %>
+        <p>File uploaded: <a href="<%= fileLink %>"><%= fileLink %></a></p>
+    <% } %>
+
+    <h2>Your Files</h2>
+    <ul>
+        <% files.forEach(function(file) { %>
+            <li><a href="/file/<%= file._id %>"><%= file.originalName %></a></li>
+        <% }); %>
+    </ul>
 </div>
