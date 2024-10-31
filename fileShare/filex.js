@@ -45,7 +45,8 @@ function filex(app) {
         fileData.password = await bcrypt.hash(req.body.password, 10);
     }
     const file = await File.create(fileData);
-    res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`, user: req.user });
+    const files = await File.find({user: req.user._id})
+    res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`, user: req.user,files:files });
 });
 
     app.route("/file/:id").get(handleDownload).post(handleDownload);
