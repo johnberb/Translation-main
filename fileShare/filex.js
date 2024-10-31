@@ -69,9 +69,10 @@ function filex(app) {
     gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
 }
       app.get('/dashboard', async (req, res) => {
-        const files = await File.find({ user: req.user._id });
-        res.render('dashboard', { user: req.user, files: files });
-    });
+    const files = await File.find({ user: req.user._id });
+    const fileLink = files.length > 0 ? `${req.headers.origin}/file/${files[0].id}` : null;
+    res.render('dashboard', { user: req.user, files: files, fileLink: fileLink });
+});
 }
 
 module.exports = filex;
