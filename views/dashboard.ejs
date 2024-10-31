@@ -65,8 +65,8 @@
         <button class="btn btn-outline-dark btn-sm btn-border-radius-sm "  type="submit">Share</button>
       </div>
     </form>
-    <% if (fileLink) { %>
-        <p>File uploaded: <a href="<%= fileLink %>"><%= fileLink %></a></p>
+    <% if (locals.fileLink) { %>
+        <p>File uploaded: <a href="<%= locals.fileLink %>"><%= locals.fileLink %></a></p>
     <% } %>
 
     <h2>Your Files</h2>
