@@ -41,11 +41,13 @@ function filex(app) {
         path: req.file.id || req.file._id, // Use _id if id is undefined
         originalName: req.file.originalname,
     };
+    //line for harshing password
     if (req.body.password != null && req.body.password !== "") {
         fileData.password = await bcrypt.hash(req.body.password, 10);
     }
     const file = await File.create(fileData);
-    res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`, user: req.user });
+    const files = await File.find({user: req.user._id})
+    res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`, user: req.user,files:files });
 });
 
     app.route("/file/:id").get(handleDownload).post(handleDownload);
@@ -68,6 +70,11 @@ function filex(app) {
 
     gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
 }
+      app.get('/dashboard', async (req, res) => {
+    const files = await File.find({ user: req.user._id });
+    const fileLink = files.length > 0 ? `${req.headers.origin}/file/${files[0].id}` : null;
+    res.render('dashboard', { user: req.user, files: files, fileLink: fileLink });
+});
 }
 
 module.exports = filex;
