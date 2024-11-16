@@ -1,1 +1,8 @@
-
+<h1>File Already Exists</h1>
+    <p>A file with the name "<%= fileName %>" already exists. Do you want to overwrite it?</p>
+    <form action="/overwrite" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="fileName" value="<%= fileName %>">
+        <input type="file" name="file" required>
+        <input type="password" name="password" placeholder="Password (optional)">
+        <button type="submit">Overwrite</button>
+    </form>
