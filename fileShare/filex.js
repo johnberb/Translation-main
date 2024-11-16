@@ -37,6 +37,12 @@ function filex(app) {
     if (!req.file) {
         return res.status(400).send('File upload failed.');
     }
+     // Check if a file with the same name already exists
+        const existingFile = await File.findOne({ originalName: req.file.originalname });
+        if (existingFile) {
+            // Prompt the user to overwrite the file or not
+            return res.render("overwritePrompt", { fileName: req.file.originalname });
+        }
     const fileData = {
         path: req.file.id || req.file._id, // Use _id if id is undefined
         originalName: req.file.originalname,
@@ -49,6 +55,25 @@ function filex(app) {
     const files = await File.find({user: req.user._id})
     res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`, user: req.user,files:files });
 });
+   //create a post request for overwriting the file
+    app.post("/overwrite", upload.single("file"), async (req, res) => {
+        if (!req.file) {
+            return res.status(400).send('File upload failed.');
+        }
+    // Overwrite the existing file
+        const existingFile = await File.findOneAndUpdate(
+            { originalName: req.file.originalname },
+            {
+                path: req.file.id || req.file._id, // Use _id if id is undefined
+                originalName: req.file.originalname,
+                password: req.body.password ? await bcrypt.hash(req.body.password, 10) : undefined
+            },
+            { new: true }
+        );
+
+        const files = await File.find({ user: req.user._id });
+        res.render("dashboard", { fileLink: `${req.headers.origin}/file/${existingFile.id}`, user: req.user, files: files });
+    });
 
     app.route("/file/:id").get(handleDownload).post(handleDownload);
 
