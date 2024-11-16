@@ -41,6 +41,7 @@ function filex(app) {
         path: req.file.id || req.file._id, // Use _id if id is undefined
         originalName: req.file.originalname,
     };
+    //line for harshing password
     if (req.body.password != null && req.body.password !== "") {
         fileData.password = await bcrypt.hash(req.body.password, 10);
     }
