@@ -1,15 +1,16 @@
-<div class="container px-2 py-2 bg-light">
+<% if (user) { %>
+<div class="container px-2 py-2 bg-dark text-light">
 
-  <h4 class="mt-4 font-family-base">THE MESSAGE TRANSFER HUB</h4>
-  <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout" class="btn btn-secondary">Logout</a></p>
-  <nav class="navbar  navbar-light bg-light">
-    <div class="container-fluid mx-2">
+  <h4 class="mt-4 font-family-base m-auto font-weight-bold"><a href="/dashboard"class="text-light text-decoration-none" >THE MESSAGE TRANSFER HUB</a></h4>
+  <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout" class="btn btn-outline-success rounded">Logout</a></p>
+  <nav class="navbar  navbar-light border border-success mt-2 rounded">
+    <div class="container-fluid ">
 
       <div class="" id="">
 
         <form class="d-flex" action="/search" method="get">
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <input class="form-control me-2 rounded" type="search" placeholder="Search" aria-label="Search" name="search">
+          <button class="btn btn-outline-success rounded" type="submit">Search</button>
         </form>
       </div>
     </div>
@@ -31,12 +32,12 @@
         <div class="row mx-1 ">
           <div class="form-group ">
             <label for="file">File:</label>
-            <input type="file" id="file" name="file" required class="form-control"
+            <input type="file" id="file" name="file" required class="form-control rounded"
               accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control" />
+            <input type="password" id="password" name="password" class="form-control rounded" />
           </div>
 
           <div class="form-group">
@@ -46,12 +47,12 @@
       </form>
     </div>
 
-    <div class="col-lg-5">
-      <div>
-        <h2>Your Files</h2>
-        <ul>
+    <div class="col-lg-5 ">
+      <div >
+        <h2 class="text-light ">Your Files</h2>
+        <ul class="">
           <% files.forEach(function(file) { %>
-          <li><a href="/file/<%= file._id %>"><%= file.originalName %></a></li>
+          <li><a href="/file/<%= file._id %>"class="text-light text-decoration-none hover "><%= file.originalName %></a></li>
           <% }); %>
         </ul>
       </div>
@@ -59,3 +60,8 @@
   </div>
 
 </div>
+<% } else { %>
+  <script>
+    window.location.href = '/login';
+  </script>
+<% } %>

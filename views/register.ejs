@@ -1,5 +1,5 @@
-<div class="card">
-    <div class=" card card-body m-auto col-6">
+<div class="card bg-dark border-0">
+    <div class=" card card-body mt-5 m-auto col-6 rounded">
         <h2 class="text-center md-3 card-title fas fa-user-plus" >REGISTER
         </h2>
         <%- include ("./partials/messages"); %>
@@ -25,7 +25,7 @@
                 <input id="Password 2" class="form-control" type="password" name="password2" placeholder="Repeat password"
                 value="<%= typeof password2 != 'undefined' ? password2 : '' %>">
             </div>
-            <button type="submit" class="btn btn-primary btn-block mt-3">REGISTER</button>
+            <button type="submit" class="btn btn-outline-primary rounded mt-3 mb-2">REGISTER</button>
         </form>
         <a href="/users/login">Do you already have an account?</a>
         

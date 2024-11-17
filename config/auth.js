@@ -1,6 +1,7 @@
 module.exports = {
     ensureAuthenticated: function(req, res, next) {
       if (req.isAuthenticated()) {
+        res.set('Cache-Control', 'no-store');
         return next();
       }
       req.flash('error_msg', 'Please log in to view that resource');
