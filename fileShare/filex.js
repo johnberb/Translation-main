@@ -33,73 +33,81 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 function filex(app) {
-    app.post("/upload", upload.single("file"), async (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('File upload failed.');
-    }
-     // Check if a file with the same name already exists
-        const existingFile = await File.findOne({ originalName: req.file.originalname });
-        if (existingFile) {
-            // Prompt the user to overwrite the file or not
-            return res.render("overwritePrompt", { fileName: req.file.originalname });
-        }
-    const fileData = {
-        path: req.file.id || req.file._id, // Use _id if id is undefined
-        originalName: req.file.originalname,
-    };
-    //line for harshing password
-    if (req.body.password != null && req.body.password !== "") {
-        fileData.password = await bcrypt.hash(req.body.password, 10);
-    }
-    const file = await File.create(fileData);
-    const files = await File.find({user: req.user._id})
-    res.render("dashboard", { fileLink: `${req.headers.origin}/file/${file.id}`, user: req.user,files:files });
-});
-   //create a post request for overwriting the file
-    app.post("/overwrite", upload.single("file"), async (req, res) => {
-        if (!req.file) {
+    app.post("/upload", upload.array("files"), async (req, res) => {
+        if (!req.files) {
             return res.status(400).send('File upload failed.');
         }
-    // Overwrite the existing file
-        const existingFile = await File.findOneAndUpdate(
-            { originalName: req.file.originalname },
-            {
-                path: req.file.id || req.file._id, // Use _id if id is undefined
-                originalName: req.file.originalname,
-                password: req.body.password ? await bcrypt.hash(req.body.password, 10) : undefined
-            },
-            { new: true }
-        );
+        
+        const fileLinks = [];
+        for (const file of req.files) {
+            const existingFile = await File.findOne({ originalName: file.originalname });
+            if (existingFile) {
+                return res.render("overwritePrompt", { fileName: file.originalname });
+            }
+            const fileData = {
+                path: file.id || file._id,
+                originalName: file.originalname,
+            };
+            if (req.body.password != null && req.body.password !== "") {
+                fileData.password = await bcrypt.hash(req.body.password, 10);
+            }
+            const newFile = await File.create(fileData);
+            fileLinks.push(`${req.headers.origin}/file/${newFile.id}`);
+        }
+        
+        const files = await File.find({ user: req.user._id });
+        res.render("dashboard", { fileLinks, user: req.user, files });
+    });
+
+    app.post("/overwrite", upload.array("files"), async (req, res) => {
+        if (!req.files) {
+            return res.status(400).send('File upload failed.');
+        }
+        
+        const fileLinks = [];
+        for (const file of req.files) {
+            const existingFile = await File.findOneAndUpdate(
+                { originalName: file.originalname },
+                {
+                    path: file.id || file._id,
+                    originalName: file.originalname,
+                    password: req.body.password ? await bcrypt.hash(req.body.password, 10) : undefined,
+                },
+                { new: true }
+            );
+            fileLinks.push(`${req.headers.origin}/file/${existingFile.id}`);
+        }
 
         const files = await File.find({ user: req.user._id });
-        res.render("dashboard", { fileLink: `${req.headers.origin}/file/${existingFile.id}`, user: req.user, files: files });
+        res.render("dashboard", { fileLinks, user: req.user, files });
     });
 
     app.route("/file/:id").get(handleDownload).post(handleDownload);
 
     async function handleDownload(req, res) {
-    const file = await File.findById(req.params.id);
-    if (!file) {
-        return res.status(404).send('File not found');
-    }
-    if (file.password != null) {
-        if (req.body.password == null) {
-            res.render("password");
-            return;
+        const file = await File.findById(req.params.id);
+        if (!file) {
+            return res.status(404).send('File not found');
         }
-        if (!(await bcrypt.compare(req.body.password, file.password))) {
-            res.render("password", { error: true });
-            return;
+        if (file.password != null) {
+            if (req.body.password == null) {
+                res.render("password");
+                return;
+            }
+            if (!(await bcrypt.compare(req.body.password, file.password))) {
+                res.render("password", { error: true });
+                return;
+            }
         }
+
+        gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
     }
 
-    gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
-}
-      app.get('/dashboard', async (req, res) => {
-    const files = await File.find({ user: req.user._id });
-    const fileLink = files.length > 0 ? `${req.headers.origin}/file/${files[0].id}` : null;
-    res.render('dashboard', { user: req.user, files: files, fileLink: fileLink });
-});
+    app.get('/dashboard', async (req, res) => {
+        const files = await File.find({ user: req.user._id });
+        const fileLinks = files.map(file => `${req.headers.origin}/file/${file.id}`);
+        res.render('dashboard', { user: req.user, files, fileLinks });
+    });
 }
 
 module.exports = filex;
