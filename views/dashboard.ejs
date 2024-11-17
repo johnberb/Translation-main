@@ -1,18 +1,24 @@
 <% if (user) { %>
 <div class="container px-2 py-2 bg-dark text-light">
 
+<<<<<<< HEAD
   <h4 class="mt-4 font-family-base m-auto font-weight-bold"><a href="/dashboard"
       class="text-light text-decoration-none">THE MESSAGE TRANSFER HUB</a></h4>
   <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout"
       class="btn btn-outline-success rounded">Logout</a></p>
   <nav class="navbar  navbar-light border border-success mt-2 rounded">
+=======
+  <h4 class="mt-4 font-family-base m-auto font-weight-bold"><a href="/dashboard"class="text-light text-decoration-none" >THE MESSAGE TRANSFER HUB</a></h4>
+  <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout" class="btn btn-outline-success rounded btn-sm float-end">Logout</a></p>
+  <nav class="navbar  navbar-light border border-success mt-3 rounded">
+>>>>>>> 9091959f2cf5b89f9a3875e2bf3c25e5399a58f4
     <div class="container-fluid ">
 
       <div class="" id="">
 
         <form class="d-flex" action="/search" method="get">
           <input class="form-control me-2 rounded" type="search" placeholder="Search" aria-label="Search" name="search">
-          <button class="btn btn-outline-success rounded" type="submit">Search</button>
+          <button class="btn btn-outline-success rounded  btn-sm" type="submit">Search</button>
         </form>
       </div>
     </div>
@@ -42,7 +48,7 @@
           </div>
 
           <div class="form-group">
-            <button class="btn btn-outline-success rounded mt-3 float-right" type="submit">Share</button>
+            <button class="btn btn-outline-success rounded mt-3 float-end btn-sm" type="submit">Share</button>
           </div>
         </div>
       </form>
@@ -63,7 +69,14 @@
 
 </div>
 <% } else { %>
+<<<<<<< HEAD
 <script>
   window.location.href = '/login';
 </script>
 <% } %>
+=======
+  <script>
+    window.location.href = '/login';
+  </script>
+<% } %>
+>>>>>>> 9091959f2cf5b89f9a3875e2bf3c25e5399a58f4
