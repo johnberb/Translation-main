@@ -28,25 +28,23 @@
       <% } %>
 
       <form action="/upload" method="post" enctype="multipart/form-data" class="">
-
-        <div class="row mx-1 ">
-          <div class="form-group ">
+        <div class="row ">
+          <div class="form-group col-12">
             <label for="file">File:</label>
             <input type="file" id="file" name="files" required class="form-control rounded" webkitdirectory directory multiple/>
           </div>
-          <div class="form-group">
+          <div class="form-group col-9">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control rounded" />
+            <input type="password" id="password" name="password" class="form-control rounded" placeholder="Enter password (optional)"/>
           </div>
-
-          <div class="form-group">
-            <button class="btn btn-outline-success rounded mt-3 float-end btn-sm" type="submit">Share</button>
+          <div class="form-group col-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-outline-success rounded btn-block">Share</button>
           </div>
         </div>
       </form>
     </div>
 
-    <div class="col-lg-5 ">
+    <div class="card card-body border border-success bg-dark">
       <div>
         <h2 class="text-light ">Your Files</h2>
         <ul class="">
@@ -61,14 +59,7 @@
 
 </div>
 <% } else { %>
-<<<<<<< HEAD
 <script>
   window.location.href = '/login';
 </script>
 <% } %>
-=======
-  <script>
-    window.location.href = '/login';
-  </script>
-<% } %>
->>>>>>> 9091959f2cf5b89f9a3875e2bf3c25e5399a58f4
