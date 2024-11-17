@@ -1,8 +1,10 @@
 <% if (user) { %>
 <div class="container px-2 py-2 bg-dark text-light">
 
-  <h4 class="mt-4 font-family-base m-auto font-weight-bold"><a href="/dashboard"class="text-light text-decoration-none" >THE MESSAGE TRANSFER HUB</a></h4>
-  <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout" class="btn btn-outline-success rounded">Logout</a></p>
+  <h4 class="mt-4 font-family-base m-auto font-weight-bold"><a href="/dashboard"
+      class="text-light text-decoration-none">THE MESSAGE TRANSFER HUB</a></h4>
+  <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout"
+      class="btn btn-outline-success rounded">Logout</a></p>
   <nav class="navbar  navbar-light border border-success mt-2 rounded">
     <div class="container-fluid ">
 
@@ -32,8 +34,7 @@
         <div class="row mx-1 ">
           <div class="form-group ">
             <label for="file">File:</label>
-            <input type="file" id="file" name="file" required class="form-control rounded"
-              accept=".doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+            <input type="file" id="file" name="files" required class="form-control rounded" webkitdirectory directory multiple/>
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
@@ -48,11 +49,12 @@
     </div>
 
     <div class="col-lg-5 ">
-      <div >
+      <div>
         <h2 class="text-light ">Your Files</h2>
         <ul class="">
           <% files.forEach(function(file) { %>
-          <li><a href="/file/<%= file._id %>"class="text-light text-decoration-none hover "><%= file.originalName %></a></li>
+          <li><a href="/file/<%= file._id %>"
+              class="text-light text-decoration-none hover "><%= file.originalName %></a></li>
           <% }); %>
         </ul>
       </div>
@@ -61,7 +63,7 @@
 
 </div>
 <% } else { %>
-  <script>
-    window.location.href = '/login';
-  </script>
+<script>
+  window.location.href = '/login';
+</script>
 <% } %>
