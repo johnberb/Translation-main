@@ -1,0 +1,13 @@
+<h1>File Already Exists</h1>
+<div class="text-warning">
+    <p style="display: inline;" >A file with the name <h4 class="font-weight-bold"
+            style="display: inline;">"<%= fileName %> "</h4> already exists. Do you want to overwrite it?</p>
+</div>
+<form action="/overwrite" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <input type="hidden" name="fileName" value="<%= fileName %>" class="">
+        <input type="file" name="file" required class="form-control">
+    </div>
+    <input type="password" name="password" placeholder="Password (optional)" class="input-group rounded mt-3">
+    <button type="submit" class="btn btn-outline-success rounded mt-3">Overwrite</button>
+</form>
