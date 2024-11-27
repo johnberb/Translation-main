@@ -1,65 +1,106 @@
 <% if (user) { %>
-<div class="container px-2 py-2 bg-dark text-light">
-
-  <h4 class="mt-4 font-family-base m-auto font-weight-bold"><a href="/dashboard"class="text-light text-decoration-none" >THE MESSAGE TRANSFER HUB</a></h4>
-  <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout" class="btn btn-outline-success rounded btn-sm float-end">Logout</a></p>
-  <nav class="navbar  navbar-light border border-success mt-3 rounded">
-    <div class="container-fluid ">
-
-      <div class="" id="">
-
-        <form class="d-flex" action="/search" method="get">
-          <input class="form-control me-2 rounded" type="search" placeholder="Search" aria-label="Search" name="search">
-          <button class="btn btn-outline-success rounded  btn-sm" type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </nav>
-  <%# file sharing engine %>
-  <div class="row mt-1">
-    <div class=" py-2 px-2 col-lg-5">
-      <p class="mx-3">UPLOAD YOUR FILE</p>
-
-      <% if(locals.fileLink != null){%>
-      <div style="margin-bottom: 1rem;">
-        Your file is uploaded
-        <a href="<%= locals.fileLink %>"><%= locals.fileLink %></a>
-      </div>
-      <% } %>
-
-      <form action="/upload" method="post" enctype="multipart/form-data" class="">
-        <div class="row ">
-          <div class="form-group col-12">
-            <label for="file">File:</label>
-            <input type="file" id="file" name="files" required class="form-control rounded"  webkitdirectory directory multiple/>
-          </div>
-          <div class="form-group col-9">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" class="form-control rounded" placeholder="Enter password (optional)"/>
-          </div>
-          <div class="form-group col-3 d-flex align-items-end">
-            <button type="submit" class="btn btn-outline-success rounded btn-block btn-sm">Share</button>
-          </div>
+  <div class="container px-2 py-2 bg-dark text-light">
+  
+    <h4 class="mt-4 font-family-base m-auto font-weight-bold"><a href="/dashboard"class="text-light text-decoration-none">THE MESSAGE TRANSFER HUB</a></h4>
+    <p class="lead mb-1">Welcome <%= user.name %> <a href="/users/logout" class="btn btn-outline-success rounded btn-sm float-end">Logout</a></p>
+    <nav class="navbar navbar-light border border-success mt-3 rounded">
+      <div class="container-fluid">
+  
+        <div class="" id="">
+  
+          <form action="/upload" method="post" enctype="multipart/form-data" class="">
+            <div class="row mb-3">
+              <!-- Radio Buttons for File/Folder Upload -->
+              <div class="form-group col-12">
+                <label>
+                  <input type="radio" name="uploadType" value="file" checked> Upload Files
+                </label>
+                <label class="ms-3">
+                  <input type="radio" name="uploadType" value="folder"> Upload Folders
+                </label>
+              </div>
+            </div>
+          
+            <!-- File Upload Input -->
+            <div id="file-upload" class="upload-type">
+              <div class="form-group col-12">
+                <label for="file">Select Files:</label>
+                <input type="file" id="file" name="files" class="form-control rounded" multiple required />
+              </div>
+            </div>
+          
+            <!-- Folder Upload Input -->
+            <div id="folder-upload" class="upload-type d-none">
+              <div class="form-group col-12">
+                <label for="folder">Select Folder:</label>
+                <input type="file" id="folder" name="files" class="form-control rounded" webkitdirectory directory multiple disabled />
+              </div>
+            </div>
+          
+            <!-- Password Field and Submit Button -->
+            <div class="row mt-3">
+              <div class="form-group col-9">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" class="form-control rounded" placeholder="Enter password (optional)" />
+              </div>
+              <div class="form-group col-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-outline-success rounded btn-block btn-sm">Share</button>
+              </div>
+            </div>
+          </form>
+        
+      
+  
+      <!-- User's Files -->
+      <div class="card card-body border border-success bg-dark mt-3 rounded">
+        <div>
+          <h2 class="text-light">Your Files</h2>
+          <ul>
+            <% files.forEach(function(file) { %>
+            <li><a href="/file/<%= file._id %>" class="text-light text-decoration-none hover"><%= file.originalName %></a></li>
+            <% }); %>
+          </ul>
         </div>
-      </form>
-    </div>
-
-    <div class="card card-body border border-success bg-dark">
-      <div>
-        <h2 class="text-light ">Your Files</h2>
-        <ul class="">
-          <% files.forEach(function(file) { %>
-          <li><a href="/file/<%= file._id %>"
-              class="text-light text-decoration-none hover "><%= file.originalName %></a></li>
-          <% }); %>
-        </ul>
       </div>
     </div>
+  
   </div>
-
-</div>
-<% } else { %>
-<script>
-  window.location.href = '/login';
-</script>
-<% } %>
+  <script>
+    // JavaScript to toggle between file and folder upload inputs
+    document.querySelectorAll('input[name="uploadType"]').forEach((radio) => {
+      radio.addEventListener('change', () => {
+        const uploadType = document.querySelector('input[name="uploadType"]:checked').value;
+  
+        const fileInputDiv = document.getElementById('file-upload');
+        const folderInputDiv = document.getElementById('folder-upload');
+  
+        const fileInput = document.getElementById('file');
+        const folderInput = document.getElementById('folder');
+  
+        if (uploadType === 'file') {
+          fileInputDiv.classList.remove('d-none'); // Show file input
+          fileInput.removeAttribute('disabled');  // Enable file input
+          fileInput.setAttribute('required', 'true'); // Set as required
+  
+          folderInputDiv.classList.add('d-none');  // Hide folder input
+          folderInput.setAttribute('disabled', 'true'); // Disable folder input
+          folderInput.removeAttribute('required'); // Remove required
+        } else if (uploadType === 'folder') {
+          folderInputDiv.classList.remove('d-none'); // Show folder input
+          folderInput.removeAttribute('disabled'); // Enable folder input
+          folderInput.setAttribute('required', 'true'); // Set as required
+  
+          fileInputDiv.classList.add('d-none');  // Hide file input
+          fileInput.setAttribute('disabled', 'true'); // Disable file input
+          fileInput.removeAttribute('required'); // Remove required
+        }
+      });
+    });
+  </script>
+  
+  <% } else { %>
+  <script>
+    window.location.href = '/login';
+  </script>
+  <% } %>
+  
