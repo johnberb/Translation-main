@@ -24,8 +24,10 @@ conn.once("open", () => {
 const storage = new GridFsStorage({
     url: mongoURI,
     file: (req, file) => {
+        // Handling folder structure by embedding the folder path into the filename
+        const folderPath = file.webkitRelativePath ? file.webkitRelativePath.replace(file.name, '') : ''; // Folder path can be passed in the request body
         return {
-            filename: file.originalname,
+            filename: `${folderPath ? folderPath + "/" : ""}${file.originalname}`,
             bucketName: "uploads",
         };
     },
