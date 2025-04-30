@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const File = require("../models/File");
 
-const mongoURI = process.env.MongoURI || "mongodb+srv://rubengs:gOOD123@cluster0.ayvpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/Translations";
+const mongoURI = process.env.MongoURI || "mongodb+srv://rubengs:gOOD123@cluster0.ayvpo.mongodb.net/Translations?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create mongoose connection
 const conn = mongoose.createConnection(mongoURI, {
