@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Build the app (if needed)
-RUN npm run build
+#RUN npm run build
 
 EXPOSE 3000
 
