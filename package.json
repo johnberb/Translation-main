@@ -6,22 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test":{
-  "name": "your-nodejs-app",
-  "version": "1.0.0",
-  "scripts": {
-    "test": "mocha test/**/*.test.js --exit --timeout 10000",
-    "test:watch": "mocha test/**/*.test.js --watch --exit",
-    "test:coverage": "nyc mocha test/**/*.test.js --exit",
-    "test:debug": "mocha test/**/*.test.js --inspect-brk"
-  },
-  "devDependencies": {
-    "mocha": "^10.0.0",
-    "chai": "^4.3.0",
-    "nyc": "^15.0.0"
-  }
-}
-  },
+      },
   "author": "john Gospel",
   "license": "ISC",
   "dependencies": {
