@@ -15,12 +15,9 @@ pipeline {
                     $class: 'GitSCM',
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[
-                        url: 'https://github.com/johnberb/Translation-main.git',
-                        credentialsId: '' // Add your GitHub credentials ID if needed
+                        url: 'https://github.com/johnberb/Translation-main.git'
                     ]],
-                    extensions: [[
-                        $class: 'CleanBeforeCheckout'
-                    ]]
+                    extensions: [[$class: 'CleanBeforeCheckout']]
                 ])
             }
         }
@@ -29,15 +26,19 @@ pipeline {
             agent {
                 docker {
                     image 'node:16-alpine'
-                    args '--user root -v ${WORKSPACE}/.npm:/root/.npm' // Share npm cache
+                    args '--user root -v ${WORKSPACE}/.npm:/root/.npm'
                     reuseNode true
                 }
             }
             steps {
                 sh '''
+                # Install Git in the Alpine container
+                apk update && apk add --no-cache git
+
                 echo "Current directory: $(pwd)"
                 echo "Node version: $(node --version)"
                 echo "NPM version: $(npm --version)"
+                echo "Git version: $(git --version)"
                 
                 # Install dependencies
                 npm install --cache ${WORKSPACE}/.npm --prefer-offline
@@ -51,7 +52,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image
                     docker.build("${DOCKER_IMAGE}:${IMAGE_TAG}")
                 }
             }
@@ -65,16 +65,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline execution completed'
-            cleanWs() // Clean workspace to prevent issues
-        }
-        failure {
-            echo 'Pipeline failed. Check logs for details.'
         }
     }
 }
