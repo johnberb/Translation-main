@@ -24,12 +24,43 @@ pipeline {
             }
         }
 
-        stage('Docker Operations') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}:${IMAGE_TAG}").push()
+                    docker.build("${DOCKER_IMAGE}:${IMAGE_TAG}")
                 }
             }
+        }
+
+        stage('Login to DockerHub') {
+            steps {
+                script {
+                    // Manual login with credentials
+                    sh """
+                    docker login -u ${DOCKERHUB_CREDENTIALS_USR} -p ${DOCKERHUB_CREDENTIALS_PSW}
+                    """
+                }
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                script {
+                    sh "docker push ${DOCKER_IMAGE}:${IMAGE_TAG}"
+                    
+                    // Optional: also push as latest
+                    sh """
+                    docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} ${DOCKER_IMAGE}:latest
+                    docker push ${DOCKER_IMAGE}:latest
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker logout' // Clean up
         }
     }
 }
