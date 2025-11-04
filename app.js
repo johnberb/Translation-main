@@ -5,12 +5,13 @@ const PORT=process.env.PORT || 3000
 const indexRouter=require('./routes/index');
 const expressLayouts= require('express-ejs-layouts');
 const mongoose=require('mongoose');
-const db=process.env.MongoURI || "mongodb+srv://rubengs:gOOD123@cluster0.ayvpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/Translations"
+const db="mongodb+srv://rubengs:gOOD12345@cluster0.ayvpo.mongodb.net/Translations?appName=Cluster0"
 const userz= require('./routes/userss');
 const session=require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const filex = require("./fileShare/filex");
+
 
 //passport config
 require('./config/passport')(passport);
@@ -23,6 +24,15 @@ app.use(expressLayouts);
 app.set('view engine','ejs');
 
 
+// Add this at the top of your app, before mongoose.connect
+//console.log('=== DEBUG MONGODB CONNECTION ===');
+//console.log('MongoURI length:', process.env.MongoURI ? process.env.MongoURI.length : 'undefined');
+//console.log('MongoURI starts with:', process.env.MongoURI ? process.env.MongoURI.substring(0, 20) + '...' : 'undefined');
+//console.log('MongoURI contains @:', process.env.MongoURI ? process.env.MongoURI.includes('@') : 'undefined');
+//console.log('MongoURI contains mongodb:', process.env.MongoURI ? process.env.MongoURI.includes('mongodb') : 'undefined');
+// console.log('Full MongoURI:', process.env.MongoURI); // Be careful with this in production
+
+// Then your existing mongoose connection
 mongoose.set('strictQuery',true)
 mongoose.connect(db,{useNewUrlParser:true,useUnifiedTopology: true})
 .then(()=>console.log('Database connected'))
