@@ -5,7 +5,7 @@ const PORT=process.env.PORT || 3000
 const indexRouter=require('./routes/index');
 const expressLayouts= require('express-ejs-layouts');
 const mongoose=require('mongoose');
-const db="mongodb+srv://rubengs:gOOD12345@cluster0.ayvpo.mongodb.net/Translations?appName=Cluster0"
+const db="mongodb+srv://xxxx:xxxxxxxx@cluster0.ayvpo.mongodb.net/Translations?appName=Cluster0"
 const userz= require('./routes/userss');
 const session=require('express-session');
 const flash = require('connect-flash');
