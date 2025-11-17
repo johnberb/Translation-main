@@ -4,7 +4,11 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const File = require("../models/File");
 
-const mongoURI = process.env.MongoURI || "mongodb+srv://`{{secrets:MONGODB_KEY}}`@cluster0.ayvpo.mongodb.net/Translations?retryWrites=true&w=majority&appName=Cluster0";
+let mongoURI = process.env.MONGODB_KEY;
+// Remove quotes if present
+if (mongoURI && (mongoURI.startsWith('"') || mongoURI.startsWith("'"))) {
+    mongoURI = mongoURI.slice(1, -1);
+}
 
 // Create mongoose connection
 const conn = mongoose.createConnection(mongoURI, {
