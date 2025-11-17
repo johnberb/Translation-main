@@ -97,6 +97,9 @@ function filex(app) {
         }
     }
 
+    // Set headers to force download instead of opening in browser
+    res.setHeader('Content-Disposition', `attachment; filename="${file.originalName}"`);
+    
     gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
 }
       app.get('/dashboard', async (req, res) => {
