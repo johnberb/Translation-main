@@ -5,7 +5,12 @@ const PORT=process.env.PORT || 3000
 const indexRouter=require('./routes/index');
 const expressLayouts= require('express-ejs-layouts');
 const mongoose=require('mongoose');
-const db = process.env.MONGODB_KEY 
+let db = process.env.MONGODB_KEY;
+// Remove quotes if present (dotenv sometimes wraps values in quotes)
+if (db && (db.startsWith('"') || db.startsWith("'"))) {
+    db = db.slice(1, -1);
+}
+console.log('Using MongoDB connection string:', db ? db.substring(0, 50) + '...' : 'NOT FOUND');
 const userz = require('./routes/userss.js');
 const session=require('express-session');
 const flash = require('connect-flash');
