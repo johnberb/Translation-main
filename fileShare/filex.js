@@ -82,26 +82,25 @@ function filex(app) {
     app.route("/file/:id").get(handleDownload).post(handleDownload);
 
     async function handleDownload(req, res) {
-    const file = await File.findById(req.params.id);
-    if (!file) {
-        return res.status(404).send('File not found');
-    }
-    if (file.password != null) {
-        if (req.body.password == null) {
-            res.render("password");
-            return;
+        const file = await File.findById(req.params.id);
+        if (!file) {
+            return res.status(404).send('File not found');
         }
-        if (!(await bcrypt.compare(req.body.password, file.password))) {
-            res.render("password", { error: true });
-            return;
+        if (file.password != null) {
+            if (req.body.password == null || req.body.password === "") {
+                // First time, show prompt with no error
+                return res.render("password", { error: false });
+            }
+            if (!(await bcrypt.compare(req.body.password, file.password))) {
+                // Only show error if password was submitted and is wrong
+                return res.render("password", { error: true });
+            }
         }
-    }
 
-    // Set headers to force download instead of opening in browser
-    res.setHeader('Content-Disposition', `attachment; filename="${file.originalName}"`);
-    
-    gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
-}
+        // Set headers to force download instead of opening in browser
+        res.setHeader('Content-Disposition', `attachment; filename="${file.originalName}"`);
+        gfs.openDownloadStream(mongoose.Types.ObjectId(file.path)).pipe(res);
+    }
       app.get('/dashboard', async (req, res) => {
     const files = await File.find({ user: req.user._id });
     const fileLink = files.length > 0 ? `${req.headers.origin}/file/${files[0].id}` : null;
