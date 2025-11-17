@@ -70,7 +70,15 @@ app.use((req,res,next)=>{
     res.locals.error=req.flash('error');
     res.locals.user = req.user;
     next();
-})
+});
+
+// Prevent caching of pages to ensure authentication is checked
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+});
 
 app.use(express.urlencoded({extended:false}));
 app.use(indexRouter);
