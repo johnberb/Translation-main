@@ -41,6 +41,11 @@ function filex(app) {
     if (!req.file) {
         return res.status(400).send('File upload failed.');
     }
+    // Check for file id
+    const fileId = req.file.id || req.file._id;
+    if (!fileId) {
+        return res.status(500).send('Upload failed: No file id returned from GridFS.');
+    }
      // Check if a file with the same name already exists
         const existingFile = await File.findOne({ originalName: req.file.originalname });
         if (existingFile) {
@@ -48,7 +53,7 @@ function filex(app) {
             return res.render("overwritePrompt", { fileName: req.file.originalname });
         }
     const fileData = {
-        path: req.file.id || req.file._id, // Use _id if id is undefined
+        path: fileId,
         originalName: req.file.originalname,
     };
     //line for harshing password
