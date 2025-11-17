@@ -10,7 +10,7 @@ let db = process.env.MONGODB_KEY;
 if (db && (db.startsWith('"') || db.startsWith("'"))) {
     db = db.slice(1, -1);
 }
-console.log('Using MongoDB connection string:', db ? db.substring(0, 50) + '...' : 'NOT FOUND');
+//console.log('Using MongoDB connection string:', db ? db.substring(0, 50) + '...' : 'NOT FOUND');
 const userz = require('./routes/userss.js');
 const session=require('express-session');
 const flash = require('connect-flash');
