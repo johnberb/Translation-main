@@ -5,8 +5,13 @@ const PORT=process.env.PORT || 3000
 const indexRouter=require('./routes/index');
 const expressLayouts= require('express-ejs-layouts');
 const mongoose=require('mongoose');
-const db="mongodb+srv://xxxx:xxxxxxxx@cluster0.ayvpo.mongodb.net/Translations?appName=Cluster0"
-const userz= require('./routes/userss');
+let db = process.env.MONGODB_KEY;
+// Remove quotes if present (dotenv sometimes wraps values in quotes)
+if (db && (db.startsWith('"') || db.startsWith("'"))) {
+    db = db.slice(1, -1);
+}
+//console.log('Using MongoDB connection string:', db ? db.substring(0, 50) + '...' : 'NOT FOUND');
+const userz = require('./routes/userss.js');
 const session=require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
@@ -66,7 +71,15 @@ app.use((req,res,next)=>{
     res.locals.error=req.flash('error');
     res.locals.user = req.user;
     next();
-})
+});
+
+// Prevent caching of pages to ensure authentication is checked
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    next();
+});
 
 app.use(express.urlencoded({extended:false}));
 app.use(lusca.csrf());

@@ -1,10 +1,14 @@
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const TwitterStrategy = require('passport-twitter-oauth2').Strategy;
 const bcrypt = require('bcryptjs');
 
 // Load User model
 const User = require('../models/Users');
 
 module.exports = function(passport) {
+  // Local Strategy
   passport.use(
     new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
       // Match user
@@ -27,6 +31,141 @@ module.exports = function(passport) {
       });
     })
   );
+
+  // Google OAuth Strategy (only if credentials are configured)
+  if (process.env.GOOGLE_CLIENT_ID && !process.env.GOOGLE_CLIENT_ID.includes('placeholder')) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          callbackURL: '/users/auth/google/callback'
+        },
+        async (accessToken, refreshToken, profile, done) => {
+          try {
+            let user = await User.findOne({ googleId: profile.id });
+            
+            if (user) {
+              return done(null, user);
+            }
+
+            // Check if user with same email exists
+            user = await User.findOne({ email: profile.emails[0].value });
+            
+            if (user) {
+              user.googleId = profile.id;
+              await user.save();
+              return done(null, user);
+            }
+
+            // Create new user
+            const newUser = new User({
+              name: profile.displayName,
+              email: profile.emails[0].value,
+              googleId: profile.id
+            });
+
+            await newUser.save();
+            done(null, newUser);
+          } catch (err) {
+            done(err, false);
+          }
+        }
+      )
+    );
+  }
+
+  // Facebook OAuth Strategy (only if credentials are configured)
+  if (process.env.FACEBOOK_APP_ID && !process.env.FACEBOOK_APP_ID.includes('placeholder')) {
+    passport.use(
+      new FacebookStrategy(
+        {
+          clientID: process.env.FACEBOOK_APP_ID,
+          clientSecret: process.env.FACEBOOK_APP_SECRET,
+          callbackURL: '/users/auth/facebook/callback',
+          profileFields: ['id', 'displayName', 'emails']
+        },
+        async (accessToken, refreshToken, profile, done) => {
+          try {
+            let user = await User.findOne({ facebookId: profile.id });
+            
+            if (user) {
+              return done(null, user);
+            }
+
+            // Check if user with same email exists
+            const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+            if (email) {
+              user = await User.findOne({ email: email });
+              if (user) {
+                user.facebookId = profile.id;
+                await user.save();
+                return done(null, user);
+              }
+            }
+
+            // Create new user
+            const newUser = new User({
+              name: profile.displayName,
+              email: email,
+              facebookId: profile.id
+            });
+
+            await newUser.save();
+            done(null, newUser);
+          } catch (err) {
+            done(err, false);
+          }
+        }
+      )
+    );
+  }
+
+  // Twitter/X OAuth Strategy (only if credentials are configured)
+  if (process.env.TWITTER_CONSUMER_KEY && !process.env.TWITTER_CONSUMER_KEY.includes('placeholder')) {
+    passport.use(
+      new TwitterStrategy(
+        {
+          consumerKey: process.env.TWITTER_CONSUMER_KEY,
+          consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+          callbackURL: '/users/auth/twitter/callback',
+          includeEmail: true
+        },
+        async (token, tokenSecret, profile, done) => {
+          try {
+            let user = await User.findOne({ twitterId: profile.id });
+            
+            if (user) {
+              return done(null, user);
+            }
+
+            // Check if user with same email exists
+            const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+            if (email) {
+              user = await User.findOne({ email: email });
+              if (user) {
+                user.twitterId = profile.id;
+                await user.save();
+                return done(null, user);
+              }
+            }
+
+            // Create new user
+            const newUser = new User({
+              name: profile.displayName,
+              email: email,
+              twitterId: profile.id
+            });
+
+            await newUser.save();
+            done(null, newUser);
+          } catch (err) {
+            done(err, false);
+          }
+        }
+      )
+    );
+  }
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);

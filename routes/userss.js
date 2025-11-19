@@ -85,6 +85,65 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+// Google OAuth Routes
+const isGoogleConfigured = process.env.GOOGLE_CLIENT_ID && !process.env.GOOGLE_CLIENT_ID.includes('placeholder');
+if (isGoogleConfigured) {
+  router.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+  );
+
+  router.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/users/login' }),
+    (req, res) => {
+      res.redirect('/dashboard');
+    }
+  );
+} else {
+  router.get('/auth/google', (req, res) => {
+    req.flash('error_msg', 'Google OAuth is not configured. Please add your credentials to .env file.');
+    res.redirect('/users/login');
+  });
+}
+
+// Facebook OAuth Routes
+const isFacebookConfigured = process.env.FACEBOOK_APP_ID && !process.env.FACEBOOK_APP_ID.includes('placeholder');
+if (isFacebookConfigured) {
+  router.get('/auth/facebook',
+    passport.authenticate('facebook', { scope: ['email'] })
+  );
+
+  router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/users/login' }),
+    (req, res) => {
+      res.redirect('/dashboard');
+    }
+  );
+} else {
+  router.get('/auth/facebook', (req, res) => {
+    req.flash('error_msg', 'Facebook OAuth is not configured. Please add your credentials to .env file.');
+    res.redirect('/users/login');
+  });
+}
+
+// Twitter/X OAuth Routes
+const isTwitterConfigured = process.env.TWITTER_CONSUMER_KEY && !process.env.TWITTER_CONSUMER_KEY.includes('placeholder');
+if (isTwitterConfigured) {
+  router.get('/auth/twitter',
+    passport.authenticate('twitter')
+  );
+
+  router.get('/auth/twitter/callback',
+    passport.authenticate('twitter', { failureRedirect: '/users/login' }),
+    (req, res) => {
+      res.redirect('/dashboard');
+    }
+  );
+} else {
+  router.get('/auth/twitter', (req, res) => {
+    req.flash('error_msg', 'X (Twitter) OAuth is not configured. Please add your credentials to .env file.');
+    res.redirect('/users/login');
+  });
+}
 
 // Logout
 router.get('/logout', (req, res, next) => {
