@@ -42,6 +42,7 @@
           <% } %>
 
           <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="<%= csrf %>"></
             <div class="mb-3">
               <label for="file" class="form-label text-light">Select File</label>
               <input type="file" id="file" name="file" required 

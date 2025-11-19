@@ -83,6 +83,11 @@ app.use((req, res, next) => {
 
 app.use(express.urlencoded({extended:false}));
 app.use(lusca.csrf());
+// Add CSRF token to views
+app.use((req, res, next) => {
+    res.locals.csrf = req.csrfToken ? req.csrfToken() : '';
+    next();
+});
 app.use(indexRouter);
 app.use('/users',userz);
 

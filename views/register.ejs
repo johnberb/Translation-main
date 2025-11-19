@@ -15,6 +15,7 @@
           <%- include ("./partials/messages"); %>
           
           <form action="/users/register" method="post" class="needs-validation" novalidate>
+            <input type="hidden" name="_csrf" value="<%= csrf %>"></
             <!-- Name Field -->
             <div class="mb-4">
               <label for="name" class="form-label fw-bold">Full Name</label>

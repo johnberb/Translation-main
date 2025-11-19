@@ -4,6 +4,7 @@
             style="display: inline;">"<%= fileName %> "</h4> already exists. Do you want to overwrite it?</p>
 </div>
 <form action="/overwrite" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrf %>"></
     <div class="form-group">
         <input type="hidden" name="fileName" value="<%= fileName %>" class="">
         <input type="file" name="file" required class="form-control">
