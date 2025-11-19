@@ -11,25 +11,25 @@
       </h2>
     </div>
     
-    <!-- Bottom Row: Search and Welcome -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-      <form class="d-flex gap-2 flex-grow-1" action="/search" method="get" style="max-width: 500px;">
-        <input class="form-control rounded-pill" type="search" placeholder="Search files..." aria-label="Search" name="search">
-        <button class="btn btn-outline-success rounded-pill px-4" type="submit">
-          <i class="bi bi-search me-1"></i> Search
-        </button>
-      </form>
-      <div class="d-flex align-items-center gap-3">
-        <span>Welcome, <span class="fw-bold text-success"><%= user.name %></span></span>
-        <a href="/users/logout" class="btn btn-outline-success rounded-pill px-4">Logout</a>
-      </div>
+    <!-- Second Row: Welcome and Logout -->
+    <div class="d-flex justify-content-end align-items-center gap-3 mb-3">
+      <span>Welcome, <span class="fw-bold text-success"><%= user.name %></span></span>
+      <a href="/users/logout" class="btn btn-outline-success rounded-pill px-4">Logout</a>
     </div>
+    
+    <!-- Third Row: Search -->
+    <form class="d-flex gap-2" action="/search" method="get">
+      <input class="form-control rounded-pill" type="search" placeholder="Search files..." aria-label="Search" name="search">
+      <button class="btn btn-outline-success rounded-pill px-4" type="submit">
+        <i class="bi bi-search me-1"></i> Search
+      </button>
+    </form>
   </header>
 
   <!-- Main Content -->
   <div class="row g-4">
     <!-- File Upload Section -->
-    <div class="col-lg-6">
+    <div class="col-lg-6 order-lg-1">
       <div class="card bg-dark border-success h-100">
         <div class="card-body">
           <h4 class="card-title text-success mb-4">
@@ -75,7 +75,7 @@
     </div>
 
     <!-- File List Section -->
-    <div class="col-lg-6">
+    <div class="col-lg-6 order-lg-2">
       <div class="card bg-dark border-success h-100">
         <div class="card-body">
           <h4 class="card-title text-success mb-4">
