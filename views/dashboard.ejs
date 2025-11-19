@@ -2,22 +2,27 @@
 <div class="container-fluid px-4 py-3 bg-dark text-light min-vh-100">
 
   <!-- Header Section -->
-  <header class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center mb-3 mb-md-0">
+  <header class="mb-4">
+    <!-- Top Row: Title and Logo -->
+    <div class="d-flex align-items-center mb-3">
       <img src="/images/bible.png" alt="Bible icon" class="me-3" style="height: 50px; width: auto;">
       <h2 class="m-0">
         <a href="/dashboard" class="text-light text-decoration-none hover-primary">THE LUO MESSAGE TRANSFER HUB</a>
       </h2>
     </div>
-    <div class="d-flex align-items-center gap-2">
-      <span class="me-2">Welcome, <span class="fw-bold text-success"><%= user.name %></span></span>
-      <form class="d-flex gap-2" action="/search" method="get">
-        <input class="form-control rounded-pill" type="search" placeholder="Search files..." aria-label="Search" name="search" style="min-width: 200px;">
+    
+    <!-- Bottom Row: Search and Welcome -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <form class="d-flex gap-2 flex-grow-1" action="/search" method="get" style="max-width: 500px;">
+        <input class="form-control rounded-pill" type="search" placeholder="Search files..." aria-label="Search" name="search">
         <button class="btn btn-outline-success rounded-pill px-4" type="submit">
           <i class="bi bi-search me-1"></i> Search
         </button>
       </form>
-      <a href="/users/logout" class="btn btn-outline-success rounded-pill px-4">Logout</a>
+      <div class="d-flex align-items-center gap-3">
+        <span>Welcome, <span class="fw-bold text-success"><%= user.name %></span></span>
+        <a href="/users/logout" class="btn btn-outline-success rounded-pill px-4">Logout</a>
+      </div>
     </div>
   </header>
 
