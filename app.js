@@ -40,7 +40,9 @@ app.set('view engine','ejs');
 
 // Then your existing mongoose connection
 mongoose.set('strictQuery',true)
-mongoose.connect(db,{useNewUrlParser:true,useUnifiedTopology: true})
+mongoose.connect(db,{maxPoolSize: 10, // Maximum number of sockets in the connection pool
+  serverSelectionTimeoutMS: 5000, // Timeout for server selection
+  socketTimeoutMS: 45000, })
 .then(()=>console.log('Database connected'))
 .catch(err=>console.log(err))
 
